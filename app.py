@@ -34,13 +34,15 @@ def color_season_cell(val):
 
 st.write("Upload a CSV of cities with monthly average temps (T1..T12).")
 
-uploaded = st.file_uploader("Upload CSV", type=["csv"])
+uploaded = st.file_uploader("Upload your own CSV (optional)", type=["csv"])
 
-if uploaded is None:
-    st.info("CSV format: City,Country,T1,T2,...,T12 (temps in °C).")
-    st.stop()
+if uploaded is not None:
+    df = pd.read_csv(uploaded)
+    st.success("Using uploaded dataset.")
+else:
+    df = pd.read_csv("cities_sample.csv")
+    st.info("Using built-in city dataset.")
 
-df = pd.read_csv(uploaded)
 
 temp_cols = [f"T{i}" for i in range(1, 13)]
 missing = [c for c in temp_cols if c not in df.columns]
